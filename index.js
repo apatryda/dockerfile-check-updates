@@ -32,7 +32,7 @@ const tagsByName = new Map();
     const stages = FROMs.map(FROM => FROM.getBuildStage()).filter(stage => stage != null);
     for (const FROM of FROMs) {
       const name = FROM.getImageName();
-      if (FROM.getRegistry() != null || names.has(name) || stages.includes(name)) {
+      if (FROM.getRegistry() != null || name === 'scratch' || names.has(name) || stages.includes(name)) {
         continue;
       }
       names.add(name);
@@ -44,7 +44,7 @@ const tagsByName = new Map();
         continue;
       }
       const name = FROM.getImageName();
-      if (!name || stages.includes(name)) {
+      if (!name || name === 'scratch' || stages.includes(name)) {
         continue;
       }
       const originalTag = FROM.getImageTag();
