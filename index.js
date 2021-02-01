@@ -32,7 +32,7 @@ const tagsByName = new Map();
     const stages = FROMs.map(FROM => FROM.getBuildStage()).filter(stage => stage != null);
     for (const FROM of FROMs) {
       const name = FROM.getImageName();
-      if (names.has(name) || stages.includes(name)) {
+      if (FROM.getRegistry() != null || names.has(name) || stages.includes(name)) {
         continue;
       }
       names.add(name);
@@ -40,6 +40,9 @@ const tagsByName = new Map();
     }
 
     for (const FROM of FROMs) {
+      if (FROM.getRegistry() != null) {
+        continue;
+      }
       const name = FROM.getImageName();
       if (!name || stages.includes(name)) {
         continue;
@@ -53,6 +56,9 @@ const tagsByName = new Map();
         continue;
       }
       const originalTagSuffix = originalTag.startsWith(coercedOriginalTag.version) ? originalTag.slice(coercedOriginalTag.version.length) : null;
+      if (originalTagSuffix == null) {
+        continue;
+      }
       const tags = tagsByName.get(name);
       const coercedTags = tags.map(tag => semver.coerce(tag));
       const foundVersion = semver.maxSatisfying(coercedTags.filter((t, i) => t && tags[i] === `${t.raw}${originalTagSuffix}`).map(t => t.version), `^${coercedOriginalTag.version}`);
