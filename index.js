@@ -65,8 +65,10 @@ const tagsByName = new Map();
       const tags = tagsByName.get(name);
       const coercedTags = tags.map(tag => semver.coerce(tag));
       const foundVersion = semver.maxSatisfying(coercedTags.filter((t, i) => t && tags[i] === `${t.raw}${originalTagSuffix}`).map(t => t.version), `^${coercedOriginalTag.version}`);
-      const foundTagIndex = tags.findIndex((t, i) => t === `${foundVersion}${originalTagSuffix}`);
-      const foundTag = tags[foundTagIndex];
+      const foundTag = tags.find(t => t === `${foundVersion}${originalTagSuffix}`);
+      if (foundTag === originalTag) {
+        continue;
+      }
       const imageRange = FROM.getImageRange();
       console.log(`${filePath}:${imageRange.start.line + 1},${imageRange.start.character + 1} ${name}:${foundTag}`);
     }
