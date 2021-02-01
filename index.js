@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const drc = require('docker-registry-client');
 const { DockerfileParser } = require('dockerfile-ast');
-const { readFileSync } = require('fs');
+const { readFileSync, statSync } = require('fs');
 const glob = require('glob');
 const semver = require('semver');
 const { hideBin } = require('yargs/helpers');
@@ -26,6 +26,9 @@ const tagsByName = new Map();
 
 (async () => {
   for (filePath of filePaths) {
+    if (!statSync(filePath).isFile()) {
+      continue;
+    }
     const content = readFileSync(filePath, { encoding: 'utf8' });
     const dockerfile = DockerfileParser.parse(content);
     const FROMs = dockerfile.getFROMs();
