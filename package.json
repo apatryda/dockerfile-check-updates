@@ -1,6 +1,6 @@
 {
   "name": "dockerfile-check-updates",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Check for updates for your Dockerfile base images",
   "main": "index.js",
   "bin": {
