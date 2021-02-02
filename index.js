@@ -5,7 +5,7 @@ const { readFileSync, statSync } = require('fs');
 const glob = require('glob');
 const semver = require('semver');
 const { hideBin } = require('yargs/helpers');
-const yargs = require('yargs/yargs')
+const yargs = require('yargs/yargs');
 
 const listTags = name => new Promise((resolve, reject) => {
   const client = drc.createClientV2({ name });
@@ -19,8 +19,13 @@ const listTags = name => new Promise((resolve, reject) => {
   });
 });
 
-const argv = yargs(hideBin(process.argv)).argv
+const { argv } = yargs(hideBin(process.argv))
+  .option('sed', {
+    type: 'boolean',
+  });
+
 const filePaths = argv._.length > 0 ? glob.sync(argv._[0]) : ['Dockerfile'];
+const { sed } = argv;
 const names = new Set();
 const tagsByName = new Map();
 
@@ -70,7 +75,11 @@ const tagsByName = new Map();
         continue;
       }
       const imageRange = FROM.getImageRange();
-      console.log(`${filePath}:${imageRange.start.line + 1},${imageRange.start.character + 1} ${name}:${foundTag}`);
+      if (sed) {
+        console.log(`sed -i '${imageRange.start.line + 1}s/${name}:${originalTag}/${name}:${foundTag}/' ${filePath}`);
+      } else {
+        console.log(`${filePath}:${imageRange.start.line + 1},${imageRange.start.character + 1} ${name}:${foundTag}`);
+      }
     }
   }
 })()
