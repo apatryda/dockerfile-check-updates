@@ -14,7 +14,9 @@
     "url": "git+https://github.com/apatryda/dockerfile-check-updates.git"
   },
   "keywords": [
-    "dockerfile"
+    "dockerfile",
+    "check",
+    "update"
   ],
   "author": "Artur Nerkowski",
   "license": "MIT",
