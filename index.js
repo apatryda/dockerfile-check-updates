@@ -76,7 +76,7 @@ const tagsByName = new Map();
       }
       const imageRange = FROM.getImageRange();
       if (sed) {
-        console.log(`sed -i '${imageRange.start.line + 1}s/${name}:${originalTag}/${name}:${foundTag}/' ${filePath}`);
+        console.log(`sed -i '${imageRange.start.line + 1}s#${name}:${originalTag}#${name}:${foundTag}#' ${filePath}`);
       } else {
         console.log(`${filePath}:${imageRange.start.line + 1},${imageRange.start.character + 1} ${name}:${foundTag}`);
       }
